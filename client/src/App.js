@@ -56,7 +56,14 @@ class App extends React.Component {
 
     this.setState({ whichClassSelected: target })
 
-    if (target === '---') return this.setState({ classPupils: [] })
+    if (target === '---') {
+
+      this.setState({ classPupils: [] })
+      this.setState({ selectedClasses: [] })
+      return
+    }
+
+
 
     this.fetchClasses(target)
       .then(res => this.setState({ selectedClasses: res }))
