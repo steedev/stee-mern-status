@@ -10,7 +10,8 @@ class App extends React.Component {
     classPupils: [],
     classPupilsDefault: [],
     selectedClasses: [],
-    presentPupils: []
+    presentPupils: [],
+    whichClassSelected: []
   }
 
   componentDidMount() {
@@ -53,6 +54,10 @@ class App extends React.Component {
   handleClassChange = (e) => {
     let target = e.target.value
 
+    this.setState({ whichClassSelected: target })
+
+    if (target === '---') return this.setState({ classPupils: [] })
+
     this.fetchClasses(target)
       .then(res => this.setState({ selectedClasses: res }))
 
@@ -65,6 +70,15 @@ class App extends React.Component {
 
   handleClassDate = (e) => {
     let target = e.target.value
+
+    if (target === '---') {
+      this.fetchClassPupils(this.state.whichClassSelected)
+        .then(res => {
+          this.setState({ classPupils: res[0].pupils })
+          this.setState({ classPupilsDefault: res[0].pupils })
+        })
+      return
+    }
 
     this.fetchPresentPupils(target)
       .then(res => {
@@ -101,7 +115,7 @@ class App extends React.Component {
         <br />
         <br />
         <br />
-        <h2>Lista obecności:</h2>
+        {this.state.classPupils.length > 0 ? <h2>Lista obecności:</h2> : ''}
         <TablePupils pupils={this.state.classPupils} />
       </div>
     )
